@@ -1,77 +1,55 @@
-'''
-Optimized preprocessing
-'''
-
 import pandas as pd
-from age_modelling import model_ages
 
-def preprocess_data(file_path, data_info=''):
-    '''
-    Preprocess the data
+def preprocess_data(train_path='train.csv', test_path='test.csv'):
+    # Daten laden
+    train_data = pd.read_csv(train_path)
+    test_data = pd.read_csv(test_path)
 
-    Parameters:
-    file_path (str): The path to the CSV file containing the data.
-    data_info (str): Additional information to include in the printed output (default is '').
+    # Erste Zeilen und Datenstruktur anzeigen
+    print("Erste Zeilen des Trainingsdatensatzes:")
+    print(train_data.head())
+    print("\nDatenstruktur:")
+    print(train_data.info())
 
-    Returns:
-    pd.DataFrame: Preprocessed feature data.
-    pd.Series: Target variable.
-    '''
-    # Load data
-    data = pd.read_csv(file_path)
+    # Fehlende Werte analysieren
+    print("\nFehlende Werte pro Spalte:")
+    print(train_data.isnull().sum())
 
-    # Preprocessing the data
-    # Display first rows and data structure
-    print(f"First rows of the {data_info} dataset:")
-    print(data.head())
-    print(f"\nData structure of the {data_info} dataset:")
-    print(data.info())
+    # 1. Fehlende Werte auffüllen
+    # Fehlende Werte für 'Age' auffüllen
+    train_data['Age'] = train_data['Age'].fillna(train_data['Age'].median())
 
-    # Analyze missing values
-    print(f"\nMissing values per column in the {data_info} dataset:")
-    print(data.isnull().sum())
+    # # Fehlende Werte für 'Embarked' auffüllen
+    # train_data['Embarked'] = train_data['Embarked'].fillna(train_data['Embarked'].mode()[0])
 
-    # Convert categorical data to numerical
-    data['Sex'] = data['Sex'].map({'male': 0, 'female': 1})  # Convert 'Sex'
-    
-    # Fill missing values for 'Fare'
-    data['Fare'] = data['Fare'].fillna(data['Fare'].median())
-    data['Fare'] = data['Fare'].astype(int)
+    # 2. Fehlende Werte für 'Cabin' behandeln 'Unknown' und extrahieren nur den ersten Buchstaben (Deck)
+    train_data['Cabin'] = train_data['Cabin'].fillna('Unknown')
+    # train_data['Cabin'] = train_data['Cabin'].apply(lambda x: x[0])
+    # train_data = pd.get_dummies(train_data, columns=['Cabin'], drop_first=True)
+    # train_data = pd.get_dummies(train_data, columns=['Cabin'], prefix='Cabin', dtype=int)
+    train_data['Cabin'] = pd.Categorical(train_data['Cabin']).codes
 
-    # Fill missing values for 'Age' using the model_ages function
-    data = model_ages(data)
+    # 3. Kategorische Daten in numerische umwandeln
+    train_data['Sex'] = train_data['Sex'].map({'male': 0, 'female': 1})  # 'Sex' umwandeln
 
-    # Fill missing values for 'Embarked'
-    data['Embarked'] = data['Embarked'].fillna(data['Embarked'].mode()[0])
+    # 4. Dummy-Variablen für 'Embarked'
+    train_data = pd.get_dummies(train_data, columns=['Embarked'], dtype=int)
 
-    # Handle missing values for 'Cabin' as 'Unknown' and extract only the first letter (Deck)
-    data['Cabin'] = data['Cabin'].fillna('Unknown')
-    data['Cabin'] = pd.Categorical(data['Cabin']).codes
+    # 5. Unnötige Spalten entfernen
+    train_data.drop(['Name', 'Ticket', 'PassengerId'], axis=1, inplace=True)
 
-    # Create dummy variables for 'Embarked'
-    data = pd.get_dummies(data, columns=['Sex', 'Pclass', 'Embarked'], dtype=int)
+    # 6. Eingabedaten (X) und Zielvariable (y) vorbereiten
+    X = train_data.drop('Survived', axis=1)  # Alle Spalten außer 'Survived'
+    y = train_data['Survived']  # Zielvariable
 
-    # Additional features
-    data['TicketFrequency'] = data['Ticket'].map(data['Ticket'].value_counts())
-    data['IsAloneTicket'] = (data['TicketFrequency'] == 1).astype(int)
-    data['FamilySize'] = data['SibSp'] + data['Parch'] + 1
-    family_map = {1: 'Alone', 2: 'Small', 3: 'Small', 4: 'Small', 5: 'Medium', 6: 'Medium', 7: 'Large', 8: 'Large', 11: 'Large'}
-    data['Family_Size_Grouped'] = data['FamilySize'].map(family_map)
-    data = pd.get_dummies(data, columns=['Family_Size_Grouped'], dtype=int)
-
-    # Select features
-    data.drop(['Name','Ticket','PassengerId','FamilySize'], axis=1, inplace=True)
-
-    # Prepare input data (X) and target variable (y)
-    X = data.drop('Survived', axis=1)  # All columns except 'Survived'
-    y = data['Survived']  # Target variable
-
-    # Display prepared data
-    print(f"\nPrepared input data (X) for the {data_info} dataset:")
+    # 7. Ausgabe der vorbereiteten Daten
+    print("\nVorbereitete Eingabedaten (X):")
     print(X.head())
-    print(f"\nTarget variable (y) for the {data_info} dataset:")
+    print("\nZielvariable (y):")
     print(y.head())
-    X.dropna(inplace=True)
-    y = y[X.index]
 
-    return X, y
+    return train_data
+
+if __name__ == "__main__":
+    train_data = preprocess_data()
+    print(train_data.head())

@@ -1,32 +1,10 @@
-KNN Model Accuracy: 0.7392
+KNN Model Accuracy: 0.7877
 Confusion Matrix:
-196 67
-42 113
+95 15
+23 46
 
 Selected Features:
-Age, Cabin, Sex_0, Sex_1, Pclass_3, Embarked_C, TicketFrequency, IsAloneTicket, Family_Size_Grouped_Alone, Family_Size_Grouped_Medium
+0, 1, 2, 8, 9
 
-Best k (after tuning): 5
-Best Accuracy from Hyperparameter Tuning: 0.8305
-
-Grid Search Results:
-{'n_neighbors': np.int64(1)} -> Mean Accuracy: 0.7509
-{'n_neighbors': np.int64(2)} -> Mean Accuracy: 0.7913
-{'n_neighbors': np.int64(3)} -> Mean Accuracy: 0.8025
-{'n_neighbors': np.int64(4)} -> Mean Accuracy: 0.8160
-{'n_neighbors': np.int64(5)} -> Mean Accuracy: 0.8305
-{'n_neighbors': np.int64(6)} -> Mean Accuracy: 0.8159
-{'n_neighbors': np.int64(7)} -> Mean Accuracy: 0.8047
-{'n_neighbors': np.int64(8)} -> Mean Accuracy: 0.8025
-{'n_neighbors': np.int64(9)} -> Mean Accuracy: 0.8058
-{'n_neighbors': np.int64(10)} -> Mean Accuracy: 0.7969
-{'n_neighbors': np.int64(11)} -> Mean Accuracy: 0.8092
-{'n_neighbors': np.int64(12)} -> Mean Accuracy: 0.8036
-{'n_neighbors': np.int64(13)} -> Mean Accuracy: 0.8058
-{'n_neighbors': np.int64(14)} -> Mean Accuracy: 0.8070
-{'n_neighbors': np.int64(15)} -> Mean Accuracy: 0.8148
-{'n_neighbors': np.int64(16)} -> Mean Accuracy: 0.8114
-{'n_neighbors': np.int64(17)} -> Mean Accuracy: 0.8137
-{'n_neighbors': np.int64(18)} -> Mean Accuracy: 0.8137
-{'n_neighbors': np.int64(19)} -> Mean Accuracy: 0.8204
-{'n_neighbors': np.int64(20)} -> Mean Accuracy: 0.8170
+Best k (after tuning): 7
+Best Accuracy from Hyperparameter Tuning: 0.8217
