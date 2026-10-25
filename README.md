@@ -1,8 +1,7 @@
 # Titanic Survival Prediction: k-Nearest Neighbours
 
 Predicting who survived the Titanic from passenger data, a tabular classification task from a university AI
-course. The course project was done in a group that compared several classifiers. **My contribution was the
-k-NN classifier**: implementation, feature selection, hyperparameter tuning and evaluation. This repository
+course. The course project was done in a group that compared several classifiers. I implemented the K-NN Classifier: feature selection, hyperparameter tuning and evaluation. This repository
 contains that part together with the preprocessing it builds on.
 
 ## Task and data
